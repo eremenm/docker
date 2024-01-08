@@ -64,4 +64,16 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - net
+  phpmyadmin:
+    image: lscr.io/linuxserver/phpmyadmin:latest
+    container_name: phpmyadmin
+    hostname: database
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - net
 
