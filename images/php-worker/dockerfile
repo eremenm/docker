@@ -1,0 +1,15 @@
+FROM php:7.4-cli
+
+# Install SUPERVISOR
+RUN apt-get update \
+    && apt-get install -y supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-install pcntl
+
+
+# Set USER
+RUN useradd -ms /bin/bash worker
+USER worker
+WORKDIR /home/worker/app

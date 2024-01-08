@@ -1,0 +1,67 @@
+version: '2'
+
+networks:
+  net:
+
+services:
+#  php_worker:
+#    build: ./images/php-worker
+#    volumes:
+#      - "./app:/home/worker/app"
+#      - "./images/php-worker/conf/supervisord.conf:/etc/supervisor/supervisord.conf"
+#      - "./images/php-worker/conf/supervisord-programs.conf:/etc/supervisor/conf.d/app.conf"
+#    command: [ "supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
+#    networks:
+#      - net
+#  php_bx:
+#    build:
+#      context: .
+#      dockerfile: ./images/php-nginx/dockerfile
+#    command: php-fpm7.4 -O
+#    volumes:
+#      - ./www:/var/www
+#    networks:
+#      - net
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./hosts:/etc/nginx/conf.d
+      - ./www:/var/www
+      - ./logs:/var/log/nginx
+    networks:
+      - net
+  php_bx:
+    build:
+      context: .
+      dockerfile: ./images/php-bx/dockerfile
+    volumes:
+      - ./www:/var/www
+    networks:
+      - net
+  php_fpm:
+    extra_hosts:
+      - "ufh.db:host-gateway"
+    build:
+      context: .
+      dockerfile: ./images/php/dockerfile
+    volumes:
+      - ./www:/var/www
+    networks:
+      - net
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - net
+
