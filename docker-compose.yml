@@ -42,8 +42,6 @@ services:
     networks:
       - net
   php_fpm:
-    extra_hosts:
-      - "ufh.db:host-gateway"
     build:
       context: .
       dockerfile: ./images/php/dockerfile
