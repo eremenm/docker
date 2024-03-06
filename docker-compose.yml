@@ -34,6 +34,9 @@ services:
     networks:
       - net
   php_bx:
+    extra_hosts:
+      - "${DB_URL}:host-gateway"
+      - "${API_URL}:host-gateway"
     build:
       context: .
       dockerfile: ./images/php-bx/dockerfile
@@ -42,6 +45,9 @@ services:
     networks:
       - net
   php_fpm:
+    extra_hosts:
+      - "${DB_URL}:host-gateway"
+      - "${API_URL}:host-gateway"
     build:
       context: .
       dockerfile: ./images/php/dockerfile
